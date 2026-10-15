@@ -1,0 +1,2912 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Godel Terminal, a financial terminal for modern research teams</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oxygen+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #000000;
+      --bg-subtle: #08090c;
+      --card: #0f1117;
+      --card-hover: #141720;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.18);
+      
+      --text: #eaeaea;
+      --text-muted: #8c93a0;
+      --text-dim: #555b68;
+      
+      --brand-mint: #33E29A;
+      --brand-mint-subtle: rgba(51, 226, 154, 0.08);
+      --brand-mint-border: rgba(51, 226, 154, 0.3);
+      --cyan: #38bdf8;
+      --red: #eb4d5c;
+      
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Oxygen Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+      font-size: 14px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── EXACT GODEL TERMINAL HEADER SYSTEM (WITH CSS GRID FOR CLEAN 3-COLUMN SEPARATION) ── */
+    #fc-navigation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 70px;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      padding: 0 32px;
+      z-index: 99999;
+      box-sizing: border-box;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-sans);
+      font-size: 14px;
+    }
+
+    .nav-left-group {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    #fc-logo {
+      width: 120px;
+      height: 38px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    #fc-logo svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .nav-menu-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+    .nav-menu-links a, .nav-menu-links button, .nav-menu-links .nav-static-item {
+      color: #eaeaea;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      background: none;
+      border: none;
+      cursor: default;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-sans);
+      transition: color 0.15s;
+      white-space: nowrap;
+    }
+    .nav-menu-links a {
+      cursor: pointer;
+    }
+    .nav-menu-links a:hover, .nav-menu-links button:hover, .nav-menu-links .nav-static-item:hover {
+      color: #fff;
+    }
+
+    .caret {
+      border: solid #eaeaea;
+      border-width: 0 1.5px 1.5px 0;
+      display: inline-block;
+      padding: 2.5px;
+      transform: rotate(45deg);
+      margin-top: -2px;
+      transition: transform 0.2s;
+    }
+
+    /* RIGHT HAND ACTIONS - STRICTLY PINNED RIGHT */
+    .nav-right-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 16px;
+      justify-self: end;
+    }
+
+    .nav-link-demo {
+      color: #eaeaea;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 12px;
+      transition: color 0.15s;
+      white-space: nowrap;
+    }
+    .nav-link-demo:hover { color: #fff; }
+
+    .fc-nav-secondary {
+      background: linear-gradient(135deg, #1a1a1a, #111);
+      color: #888;
+      border: 1px solid #222;
+      border-radius: 100px;
+      padding: 8px 18px;
+      text-decoration: none;
+      font-size: 13px;
+      transition: border-color 0.18s, color 0.18s;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .fc-nav-secondary:hover {
+      border-color: #444;
+      color: #ccc;
+    }
+
+    /* THE ANIMATING MINT BUTTON (IDENTICAL TO SIGN UP BUTTON) */
+    .btn-mint-glow {
+      position: relative;
+      background: var(--brand-mint-subtle);
+      color: var(--brand-mint);
+      border: 1.5px solid var(--brand-mint-border);
+      border-radius: 100px;
+      padding: 9px 22px;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: color 0.35s, border-color 0.35s;
+      flex-shrink: 0;
+      z-index: 1;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .btn-mint-glow::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #33E29A 0%, #1ecfb0 100%);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 100px;
+      z-index: -1;
+    }
+    .btn-mint-glow:hover::before {
+      transform: scaleX(1);
+    }
+    .btn-mint-glow:hover {
+      color: #000;
+      border-color: var(--brand-mint);
+    }
+
+    /* Hero CTA size modifier */
+    .btn-mint-glow.hero-cta {
+      padding: 12px 26px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    body {
+      padding-top: 70px;
+    }
+
+    /* ── HERO (QUARTR-STYLE CENTERED LAYOUT) ── */
+    .hero {
+      padding: 72px 0 40px;
+      text-align: center;
+      position: relative;
+    }
+    .hero-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--brand-mint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hero-tag span.badge {
+      background: var(--brand-mint-subtle);
+      border: 1px solid var(--brand-mint-border);
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+    /* ── SUBTLE ENTRANCE ANIMATIONS ── */
+    @keyframes heroFadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes showcaseFadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-animate-text {
+      animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      will-change: transform, opacity;
+    }
+    .hero-animate-showcase {
+      animation: showcaseFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+      will-change: transform, opacity;
+    }
+
+    .hero h1 {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      max-width: 920px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #fff;
+    }
+    .hero h1 span {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .hero p {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 680px;
+      line-height: 1.55;
+      font-weight: 300;
+      margin: 0 auto 32px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 56px;
+    }
+    .btn-secondary-action {
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+      border: 1px solid var(--border);
+      padding: 12px 24px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    }
+    .btn-secondary-action:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+    }
+
+    /* ── FULL-VIEW PRODUCT SHOWCASE (QUARTR SIGNATURE) ── */
+    .showcase-wrapper {
+      position: relative;
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+    /* Subtle ambient aura behind the terminal frame */
+    .showcase-glow {
+      position: absolute;
+      top: 10%;
+      left: 15%;
+      right: 15%;
+      bottom: 20%;
+      background: radial-gradient(circle, rgba(51, 226, 154, 0.12) 0%, rgba(56, 189, 248, 0.05) 50%, transparent 70%);
+      filter: blur(60px);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .showcase-frame {
+      position: relative;
+      z-index: 1;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 30px 90px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      background: #08090c;
+      cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+      will-change: transform;
+    }
+    .showcase-frame:hover {
+      transform: scale(1.012) translateY(-2px);
+      border-color: rgba(51, 226, 154, 0.25);
+      box-shadow: 0 35px 100px -20px rgba(0, 0, 0, 0.9), 0 0 40px rgba(51, 226, 154, 0.08), 0 0 0 1px rgba(51, 226, 154, 0.15);
+    }
+    .showcase-frame img, .showcase-frame video {
+      width: 100%;
+      height: auto;
+      display: block;
+      vertical-align: middle;
+    }
+
+    /* ── LOGO MARQUEE / SOCIAL PROOF PLACEHOLDER ── */
+    .logo-marquee-section {
+      padding: 56px 0 32px;
+      margin-bottom: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .marquee-label {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #9ba1b0;
+      margin-bottom: 24px;
+    }
+    .marquee-wrap {
+      display: flex;
+      overflow: hidden;
+      user-select: none;
+      mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+    }
+    .marquee-track {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+      animation: marqueeScroll 44s linear infinite;
+      flex-shrink: 0;
+      padding-right: 64px;
+    }
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+    .logo-item {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      color: #8e95a5;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      opacity: 0.75;
+      transition: opacity 0.2s, color 0.2s;
+      white-space: nowrap;
+      text-transform: uppercase;
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .logo-item:hover {
+      opacity: 1;
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ── BIFURCATION CARDS ── */
+    .bifurcation {
+      padding: 80px 0 96px;
+    }
+    .sec-header {
+      margin-bottom: 40px;
+      text-align: left;
+    }
+    .sec-sub {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #9ba1b0;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .sec-title {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 860px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.2s;
+    }
+    .product-card:hover {
+      border-color: var(--border-hover);
+    }
+    .card-top {
+      display: flex;
+      flex-direction: column;
+    }
+    .card-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--brand-mint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .card-label.api {
+      color: var(--cyan);
+    }
+    .card-title {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+    .card-p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 24px;
+      font-weight: 300;
+    }
+
+    /* Motion Media Slot */
+    .card-media-slot {
+      width: 100%;
+      height: 260px;
+      border-radius: 8px;
+      background: #060709;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-media-slot.placeholder {
+      border-style: dashed;
+      border-color: var(--border-hover);
+    }
+    .card-media-slot.placeholder:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      background: #090b0e;
+    }
+    .card-media-slot video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      border-radius: 7px;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-media-slot:hover video {
+      transform: scale(1.02);
+    }
+    .card-media-slot:hover {
+      border-color: rgba(51, 226, 154, 0.3);
+      box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.7), 0 0 20px rgba(51, 226, 154, 0.06);
+    }
+
+    /* ── KISS TERMINAL COMMAND TREE GRAPHIC ── */
+    .concept-stage {
+      width: 100%;
+      height: 260px;
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 50% 84%, rgba(51, 226, 154, 0.08) 0%, rgba(51, 226, 154, 0.015) 45%, transparent 72%),
+        radial-gradient(rgba(255, 255, 255, 0.038) 1px, transparent 1px),
+        #06080b;
+      background-size: 100% 100%, 16px 16px, 100% 100%;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      transition: border-color 0.3s ease;
+    }
+    .product-card:hover .concept-stage {
+      border-color: rgba(51, 226, 154, 0.22);
+    }
+
+    .cmd-tree-stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .cmd-tree-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    /* Solid green circuit lines for all commands flowing into the center G */
+    .cmd-wire-base {
+      fill: none;
+      stroke: rgba(51, 226, 154, 0.34);
+      stroke-width: 1.3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    /* Slow, subtle tiny flowing light pulse on select paths into the G logo */
+    .cmd-wire-flow {
+      fill: none;
+      stroke: #33E29A;
+      stroke-width: 1.65;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 6 94;
+      animation: tinyFlowIn 6.5s linear infinite;
+      filter: drop-shadow(0 0 3.5px rgba(51, 226, 154, 0.75));
+    }
+    .cmd-wire-flow.delay-1 { animation-delay: -1.3s; }
+    .cmd-wire-flow.delay-2 { animation-delay: -2.6s; }
+    .cmd-wire-flow.delay-3 { animation-delay: -3.9s; }
+    .cmd-wire-flow.delay-4 { animation-delay: -5.2s; }
+
+    @keyframes tinyFlowIn {
+      from { stroke-dashoffset: 100; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* All Command Grid Badges Share the Same Highlight Green Effect */
+    .cmd-node-pill {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      height: 25px;
+      min-width: 48px;
+      padding: 0 10px;
+      border-radius: 6px;
+      background: #0b1318;
+      border: 1px solid rgba(51, 226, 154, 0.52);
+      color: var(--brand-mint);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.65), 0 0 10px rgba(51, 226, 154, 0.08);
+    }
+    .cmd-node-pill.cmd-node-more {
+      background: #14171f;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #9ba3b2;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.65);
+    }
+
+    /* Bottom-Center Godel G Hub */
+    .cmd-g-hub {
+      position: absolute;
+      left: 50%;
+      top: 83%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #000000;
+      border: 1.5px solid rgba(51, 226, 154, 0.55);
+      box-shadow:
+        0 0 20px rgba(51, 226, 154, 0.22),
+        0 4px 12px rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8.5px;
+    }
+    .cmd-g-hub svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── AUTHENTIC API CODE TERMINAL WINDOW ── */
+    .api-code-window {
+      width: 100%;
+      height: 100%;
+      background: #050608;
+      border-radius: 7px;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      line-height: 1.55;
+      color: #9ba1b0;
+      overflow: hidden;
+      cursor: text;
+      user-select: text;
+    }
+    .api-code-header {
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .api-code-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .api-code-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .api-code-dot.red { background: #ff5f56; }
+    .api-code-dot.yellow { background: #ffbd2e; }
+    .api-code-dot.green { background: #27c93f; }
+    .api-code-badge {
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+    .api-code-body {
+      padding: 14px 16px;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .api-code-line {
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .token-cmd { color: #38bdf8; font-weight: 500; }
+    .token-method { color: #f59e0b; font-weight: 600; }
+    .token-url { color: #33E29A; }
+    .token-flag { color: #818cf8; }
+    .token-header { color: #cbd5e1; }
+    .token-key { color: #64748b; font-style: italic; }
+    .token-json-key { color: #94a3b8; }
+    .token-json-val { color: #38bdf8; }
+    .token-json-str { color: #33E29A; }
+    .token-comment { color: #475569; font-style: italic; margin-top: 6px; }
+    .slot-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+    .slot-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slot-sub {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      min-height: 76px;
+    }
+    .card-meta {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.35;
+      text-align: left;
+      padding-top: 2px;
+    }
+    .card-meta strong {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .card-bottom .btn-secondary-action {
+      padding: 9px 18px;
+      font-size: 13px;
+    }
+    .card-actions-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      text-align: right;
+    }
+    .card-sub-link {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+      padding-right: 2px;
+      text-align: right;
+    }
+    .card-sub-link:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    /* ── THE REAL COST BREAKDOWN STRIP ── */
+    .cost-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-subtle);
+      padding: 80px 0;
+    }
+    .cost-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    @media (max-width: 860px) {
+      .cost-grid { grid-template-columns: 1fr; }
+    }
+    .cost-left h3 {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+      color: #fff;
+    }
+    .cost-left p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+    .cost-comparison-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      cursor: default;
+      transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    }
+    .cost-comparison-card:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.7);
+    }
+    .cost-bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cost-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+    .cost-bar-label strong {
+      transition: text-shadow 0.3s ease;
+    }
+    .cost-comparison-card:hover .cost-bar-row:last-child .cost-bar-label strong {
+      text-shadow: 0 0 8px rgba(51, 226, 154, 0.4);
+    }
+    .cost-bar-wrap {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .cost-bar-fill-red {
+      height: 100%;
+      width: 100%;
+      background: var(--red);
+    }
+    .cost-bar-fill-green {
+      height: 100%;
+      width: 5.5%;
+      background: var(--brand-mint);
+      transform-origin: left center;
+      will-change: transform;
+    }
+
+    /* ── SUBTLE SLIDER PULSE/BOUNCE ANIMATION (GREEN BAR ONLY) ── */
+    @keyframes greenBarSubtle {
+      0% {
+        transform: scaleX(1);
+      }
+      45% {
+        transform: scaleX(1.22);
+      }
+      78% {
+        transform: scaleX(0.97);
+      }
+      100% {
+        transform: scaleX(1);
+      }
+    }
+
+    .cost-comparison-card:hover .cost-bar-fill-green {
+      animation: greenBarSubtle 1.65s ease-in-out forwards;
+    }
+
+    /* ── STATS SECTION (BLOOMBERG STYLE HEADLINE + 4-STAT ROW) ── */
+    .capabilities-section {
+      padding: 0;
+    }
+    .stats-header {
+      text-align: center;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    .stats-headline {
+      font-size: clamp(24px, 2.4vw, 34px);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.3;
+      color: #ffffff;
+    }
+    .stats-container {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 44px 0 24px;
+    }
+    .stats-row-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 36px;
+      text-align: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .stat-number {
+      font-size: clamp(32px, 3.2vw, 44px);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--brand-mint);
+      line-height: 1;
+      font-family: var(--font-sans);
+      text-shadow: 0 0 30px rgba(51, 226, 154, 0.22);
+    }
+    .stat-number span.stat-accent {
+      color: var(--brand-mint);
+    }
+    .stat-label {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.45;
+      font-weight: 300;
+      max-width: 250px;
+    }
+    .stats-footnote {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: 0.02em;
+    }
+
+    @media (max-width: 960px) {
+      .stats-row-4 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px 24px;
+      }
+    }
+    @media (max-width: 560px) {
+      .stats-row-4 {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+    }
+
+    /* ── TESTIMONIAL QUOTE (QUARTR STYLE) ── */
+    .quote-section {
+      padding: 96px 0 96px;
+    }
+    .quote-section-intro {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto 36px;
+      padding: 0 16px;
+    }
+    .quote-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: center;
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .quote-media-wrap {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+    .quote-media-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+      filter: contrast(1.05) brightness(0.95);
+    }
+    .quote-content blockquote {
+      margin: 0 0 20px;
+      padding: 0;
+      border: none;
+    }
+    .quote-content blockquote p {
+      font-size: clamp(20px, 2.1vw, 26px);
+      line-height: 1.35;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: #f0f2f5;
+    }
+    .quote-meta-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+    .quote-meta-role {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    @media (max-width: 860px) {
+      .quote-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 0 20px;
+      }
+      .quote-media-wrap {
+        max-width: 260px;
+      }
+    }
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+    .quote-media-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+      filter: contrast(1.05) brightness(0.95);
+    }
+    .quote-content blockquote {
+      margin: 0 0 24px;
+      padding: 0;
+      border: none;
+    }
+    .quote-content blockquote p {
+      font-size: clamp(20px, 2.1vw, 27px);
+      line-height: 1.35;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: #f0f2f5;
+    }
+    .quote-meta-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+    .quote-meta-role {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    @media (max-width: 860px) {
+      .quote-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 0 20px;
+      }
+      .quote-media-wrap {
+        max-width: 280px;
+      }
+    }
+
+                                    /* ── MOBILE APP SHOWCASE (QUARTR STYLE - V20 SHIFTED) ── */
+/* ── MOBILE SECTION: NARROWER FOCUSED TEXT, LIGHTER SLATE, PHONE FLUSH AT BOTTOM ── */
+    .mobile-showcase-section {
+      text-align: center;
+      padding: 68px 24px 0;
+      overflow: hidden;
+      position: relative;
+      background-color: #12151e;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-top: 0;
+      margin-bottom: 80px;
+    }
+
+    .mobile-header {
+      max-width: 560px;
+      margin: 0 auto 22px;
+    }
+
+    .mobile-headline {
+      font-size: clamp(30px, 3.2vw, 42px);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.18;
+      color: #ffffff;
+      margin-bottom: 14px;
+      white-space: nowrap;
+    }
+
+    .mobile-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      font-weight: 300;
+      max-width: 480px;
+      margin: 0 auto 20px;
+    }
+
+    .mobile-meta-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 13.5px;
+    }
+
+    .mobile-rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .mobile-stars {
+      color: var(--brand-mint);
+      letter-spacing: 2px;
+      font-size: 13.5px;
+    }
+
+    .mobile-link {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.2s ease;
+    }
+    .mobile-link:hover {
+      color: var(--brand-mint);
+    }
+
+    /* ── PHONE STAGE (FLUSH ON BOTTOM BORDER) ── */
+    .phone-stage {
+      margin-top: 36px;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      line-height: 0;
+    }
+
+    .iphone-frame {
+      width: 320px;
+      height: 455px; /* Slightly taller to show a bit more phone body below the notification stack */
+      border-radius: 44px 44px 0 0;
+      background: #121316;
+      position: relative;
+      padding: 8px 8px 0;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-bottom: none;
+      box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.8);
+      overflow: hidden;
+      display: block;
+    }
+
+    .iphone-frame::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 105px;
+      width: 2.5px;
+      height: 36px;
+      background: #252830;
+      border-radius: 2px 0 0 2px;
+      box-shadow: 0 44px 0 #252830;
+    }
+    .iphone-frame::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: 120px;
+      width: 2.5px;
+      height: 50px;
+      background: #252830;
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* Screen with Architectural Concrete Wallpaper/* Screen with Architectural Concrete Wallpaper & Light Shaft */
+    .iphone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 36px 36px 0 0;
+      position: relative;
+      background: 
+        radial-gradient(circle at 50% 28%, rgba(51, 226, 154, 0.15) 0%, transparent 60%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.0) 45%),
+        linear-gradient(195deg, #262a36 0%, #171a22 40%, #0c0e12 80%, #06070a 100%);
+      padding: 10px 12px 0;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .iphone-screen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 85% 15%, rgba(180, 200, 220, 0.15) 0%, transparent 55%),
+        linear-gradient(65deg, transparent 38%, rgba(255, 255, 255, 0.06) 48%, transparent 58%);
+      pointer-events: none;
+    }
+
+    /* Status Bar Row - Perfectly aligned with Dynamic Island */
+    .iphone-status-bar {
+      width: 100%;
+      height: 27px;
+      position: relative;
+      margin-bottom: 35px; /* Clean breathing room below camera/status row */
+      z-index: 10;
+      line-height: normal;
+    }
+    .status-left-wing {
+      position: absolute;
+      left: 0;
+      width: calc(50% - 47px);
+      height: 27px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 20px;
+    }
+    .iphone-status-time {
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      line-height: 1;
+    }
+    .status-right-wing {
+      position: absolute;
+      right: 16px; /* Evenly centers the 3 icons between Dynamic Island and phone outer border (25px / 25px) */
+      top: 0;
+      height: 27px;
+      display: flex;
+      align-items: center;
+    }
+    .iphone-status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px; /* Neatly grouped together */
+      height: 27px;
+    }
+    .iphone-status-icons svg {
+      display: block;
+      flex-shrink: 0;
+    }
+    .status-5g {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      line-height: 1;
+      display: inline-block;
+      margin: 0 1px;
+    }
+
+    /* Dynamic Island */
+    .dynamic-island {
+      width: 94px;
+      height: 27px;
+      background: #000;
+      border-radius: 14px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 9px;
+      box-shadow: inset 0 0 1px 1px rgba(255, 255, 255, 0.08);
+      line-height: normal;
+      pointer-events: auto;
+    }
+    .island-camera {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #080c14;
+      border: 1px solid #141b27;
+      position: relative;
+      box-shadow: 0 0 1px rgba(0, 0, 0, 0.8);
+    }
+    .island-camera::before {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #182844 0%, #080c14 100%);
+    }
+    .island-camera::after {
+      content: '';
+      position: absolute;
+      top: 2.2px;
+      left: 2.2px;
+      width: 1.5px;
+      height: 1.5px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.45);
+    }
+
+    /* Lock Screen Clock */
+    .lock-date {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: -0.01em;
+      margin-top: 0;
+      margin-bottom: 2px;
+      line-height: normal;
+    }
+    .lock-time {
+      font-size: 60px;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: #ffffff;
+      margin-bottom: 38px; /* Balanced: +10px breathing room between time and notification stack */
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Notification Center Container */
+    .notification-center {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+      line-height: normal;
+    }
+
+    .notification-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.75);
+      padding: 0 4px 2px;
+    }
+    .notification-bar-header .nc-clear {
+      width: 15px;
+      height: 15px;
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8.5px;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    /* ── AUTHENTIC IOS FROSTED GLASS NOTIFICATION CARD ── */
+    .ios-notification {
+      background: rgba(40, 44, 56, 0.60);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-top: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 14px;
+      padding: 9px 11px;
+      display: grid;
+      grid-template-columns: 29px 1fr 34px;
+      gap: 10px;
+      align-items: center;
+      box-shadow: 0 5px 16px -2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .ios-notification.no-thumb {
+      grid-template-columns: 29px 1fr auto;
+    }
+
+    /* App Icon Squircle - Flat matte */
+    .app-icon-squircle {
+      width: 29px;
+      height: 29px;
+      background: #000000;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: none;
+      border: 0.5px solid rgba(255, 255, 255, 0.15);
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .app-icon-squircle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Two-Line Text Stack */
+    .notif-text {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5px;
+    }
+    .notif-title {
+      font-size: 11.8px;
+      font-weight: 600;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: -0.01em;
+    }
+    .notif-subtitle {
+      font-size: 10.5px;
+      line-height: 1.32;
+      color: rgba(255, 255, 255, 0.82);
+      font-weight: 400;
+      letter-spacing: -0.005em;
+    }
+
+    /* Right Column: Timestamp on Top, Squircle Thumbnail Below with extra padding */
+    .notif-right-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+      align-self: flex-start;
+    }
+    .notif-time {
+      font-size: 9.5px;
+      color: rgba(255, 255, 255, 0.55);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+    .notif-thumbnail {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: #14161d;
+      border: 0.5px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      box-shadow: none;
+      margin-top: 1px;
+    }
+    .notif-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    
+
+    /* ── WORKFLOW & CONTENT CAROUSEL ── */
+    .content-carousel-section {
+      padding: 64px 0 72px;
+      position: relative;
+    }
+    .carousel-header-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .carousel-title-group h2 {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .carousel-title-group p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .carousel-nav-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    .carousel-nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .carousel-nav-btn:hover {
+      background: var(--card-hover);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+    .carousel-nav-btn:active {
+      transform: scale(0.95);
+    }
+    .carousel-nav-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+    }
+
+    .carousel-track-container {
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 4px 0 20px;
+      margin: 0 -24px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    .carousel-track-container::-webkit-scrollbar {
+      display: none;
+    }
+    .carousel-track {
+      display: flex;
+      gap: 20px;
+      width: max-content;
+      padding-right: 24px;
+    }
+
+    .carousel-card {
+      width: 320px;
+      flex-shrink: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .carousel-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.7);
+    }
+
+    .carousel-card-media {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background:
+        radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        radial-gradient(ellipse at 50% 100%, rgba(51, 226, 154, 0.04) 0%, transparent 65%),
+        #060709;
+      background-size: 16px 16px, 100% 100%, 100% 100%;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carousel-card-media svg.kiss-emblem {
+      width: 100%;
+      height: 100%;
+      display: block;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .carousel-card:hover .carousel-card-media svg.kiss-emblem {
+      transform: scale(1.03);
+    }
+
+    .carousel-card-body {
+      padding: 22px 20px 28px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .carousel-card-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #fff;
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+    .carousel-card-desc {
+      font-size: 13px;
+      color: #9aa1ad;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .carousel-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .carousel-card {
+        width: 270px;
+      }
+    }
+
+/* ── SALES CLOSER CARD (SEE IT IN ACTION) ── */
+    .sales-cta-section {
+      padding: 0 0 48px;
+    }
+    .sales-cta-card {
+      background:
+        radial-gradient(ellipse at 0% 100%, rgba(51, 226, 154, 0.12) 0%, transparent 60%),
+        var(--card);
+      border: 1px solid rgba(51, 226, 154, 0.22);
+      border-radius: 14px;
+      padding: 36px 40px;
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 36px;
+      align-items: center;
+      box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(51, 226, 154, 0.04);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .sales-cta-card:hover {
+      border-color: rgba(51, 226, 154, 0.35);
+      box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.9), 0 0 40px rgba(51, 226, 154, 0.08);
+    }
+    .sales-eye-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--brand-mint);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .sales-cta-card h2 {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+    .sales-cta-card p {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      font-weight: 300;
+      margin-bottom: 24px;
+      max-width: 540px;
+    }
+    .sales-btn-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn-outline-action {
+      background: transparent;
+      color: #eaeaea;
+      border: 1px solid var(--border-hover);
+      padding: 11px 22px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .btn-outline-action:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+    }
+    .sales-social-proof {
+      border-left: 1px solid var(--border);
+      padding-left: 36px;
+    }
+    .sales-social-proof h4 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+    .sales-social-proof ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .sales-social-proof li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #e2e5eb;
+      font-weight: 400;
+    }
+    .sales-social-proof li svg {
+      width: 14px;
+      height: 14px;
+      color: var(--brand-mint);
+      flex-shrink: 0;
+    }
+    @media (max-width: 860px) {
+      .sales-cta-card {
+        grid-template-columns: 1fr;
+        padding: 30px 24px;
+        gap: 28px;
+      }
+      .sales-social-proof {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        padding-left: 0;
+        padding-top: 24px;
+      }
+    }
+
+    /* ── ARIES BROKERAGE PARTNERSHIP SECTION ── */
+    .aries-section {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-subtle);
+      padding: 80px 0;
+    }
+    .aries-card {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 550px) auto;
+      justify-content: center;
+      gap: 44px;
+      align-items: center;
+      box-shadow: none;
+      position: relative;
+    }
+    .aries-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: #0BAA5E;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 14px;
+      font-weight: 500;
+    }
+    .aries-card h2 {
+      font-size: clamp(34px, 3.6vw, 44px);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      color: #fff;
+      margin-bottom: 14px;
+      line-height: 1.12;
+    }
+    .aries-card h2 .aries-accent {
+      color: var(--brand-mint);
+    }
+    .aries-card p {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      font-weight: 300;
+      margin-bottom: 22px;
+      max-width: 530px;
+    }
+    .aries-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .aries-feature-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 100px;
+      background: rgba(11, 170, 94, 0.08);
+      border: 1px solid rgba(11, 170, 94, 0.20);
+      font-size: 11.5px;
+      color: #b8e8d4;
+      font-weight: 500;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .aries-feature-pill:hover {
+      background: rgba(11, 170, 94, 0.14);
+      border-color: rgba(11, 170, 94, 0.40);
+    }
+    .aries-feature-pill svg {
+      width: 11px;
+      height: 11px;
+      color: #0BAA5E;
+      flex-shrink: 0;
+    }
+    .aries-cta-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn-aries-primary {
+      background: rgba(11, 170, 94, 0.12);
+      color: #0BAA5E;
+      border: 1.5px solid rgba(11, 170, 94, 0.45);
+      border-radius: 100px;
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+    .btn-aries-primary:hover {
+      background: #0BAA5E;
+      color: #000;
+      border-color: #0BAA5E;
+    }
+    .aries-right-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      border-left: 1px solid var(--border);
+      padding-left: 44px;
+    }
+    .aries-logo-wrap {
+      width: 272px;
+      height: auto;
+      opacity: 0.95;
+      filter: drop-shadow(0 0 12px rgba(11, 170, 94, 0.15));
+    }
+    .aries-trust-badges {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .aries-trust-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-align: center;
+    }
+    .aries-trust-badge .badge-label {
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .aries-trust-badge .badge-value {
+      font-size: 18px;
+      color: #e2e5eb;
+      font-weight: 600;
+    }
+    .aries-flow-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .aries-flow-arrow .flow-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--brand-mint);
+      box-shadow: 0 0 6px rgba(51, 226, 154, 0.5);
+    }
+    .aries-flow-arrow .flow-arrow {
+      color: rgba(11, 170, 94, 0.5);
+      font-size: 14px;
+    }
+    .aries-flow-arrow .flow-dot.aries-dot {
+      background: #0BAA5E;
+      box-shadow: 0 0 6px rgba(11, 170, 94, 0.5);
+    }
+    @media (max-width: 860px) {
+      .aries-card {
+        grid-template-columns: 1fr;
+        padding: 30px 24px;
+        gap: 28px;
+      }
+      .aries-right-panel {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        padding-left: 0;
+        padding-top: 24px;
+      }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 44px 0 60px;
+      background: var(--bg);
+    }
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0;
+      flex-wrap: wrap;
+      gap: 32px;
+    }
+    .footer-desc {
+      max-width: 320px;
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .footer-cols {
+      display: flex;
+      gap: 64px;
+    }
+    .footer-col h5 {
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+    .footer-col a {
+      display: block;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      margin-bottom: 10px;
+      transition: color 0.15s;
+    }
+    .footer-col a:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <!-- EXACT GODEL TERMINAL LIVE SITE HEADER -->
+  <header id="fc-navigation" data-current="home">
+    <div class="nav-left-group">
+      <!-- Official Godel SVG Wordmark -->
+      <a href="/" id="fc-logo" aria-label="Godel Terminal home">
+        <svg viewBox="0 0 345 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M232.244 0.0273438H176.033C171.811 0.0273438 167.921 2.30121 165.861 5.98011L137.738 56.1069H179.963C192.821 56.1069 204.672 49.1699 210.962 37.9703L232.251 0.0273438H232.244ZM159.361 44.2828L177.522 11.9193H210.574L200.124 30.5514C195.364 39.036 186.389 44.2896 176.645 44.2896H159.361V44.2828Z" fill="#fff"/>
+          <path d="M162.924 0H106.182C102.286 0 98.6956 2.10417 96.7917 5.4912L68.4106 56.0795H131.455L162.917 0H162.924ZM90.0466 44.2555L108.208 11.892H141.26L123.099 44.2555H90.0466Z" fill="#fff"/>
+          <path d="M337.983 56.0795L345 44.2555H296.989L321.821 0H313.661C309.439 0 305.55 2.27385 303.489 5.95276L275.367 56.0795H337.997H337.983Z" fill="#fff"/>
+          <path d="M47.5973 56.0796L34.8346 78.825H49.8343L80.4184 24.3134H38.3092L31.2921 36.1375H58.7892L54.2336 44.2487H14.0486L32.21 11.8852H75.3936L82.4107 0.0611384L30.721 0.00683594C26.4985 0.00683594 22.6024 2.2807 20.5353 5.95961L1.38798 40.0879C-2.63052 47.2489 2.55749 56.0864 10.7781 56.0864H47.5973V56.0796Z" fill="#fff"/>
+          <path d="M228.008 44.2555L231.353 38.296L232.509 36.2325H260.047L267.064 24.4084H239.146L246.17 11.892H294.222L300.892 0.00683594H244.68C240.458 0.00683594 236.569 2.2807 234.508 5.95961L206.386 56.0864H269.431L276.067 44.2623H228.015L228.008 44.2555Z" fill="#fff"/>
+        </svg>
+      </a>
+
+      <!-- Navigation Links from godelterminal.com -->
+      <div class="nav-menu-links">
+        <span class="nav-static-item">Product <span class="caret"></span></span>
+        <span class="nav-static-item">Customers <span class="caret"></span></span>
+        <a href="https://godelterminal.com/pricing/" target="_blank">Pricing</a>
+        <a href="https://godelterminal.com/docs.html" target="_blank">Documentation</a>
+        <a href="https://godelterminal.com/news.html" target="_blank">News</a>
+      </div>
+    </div>
+
+    <!-- Center flex spacer for grid -->
+    <div></div>
+
+    <!-- Official CTA Buttons - STRICTLY RIGHT CORNER -->
+    <div class="nav-right-actions">
+      <a href="https://godelterminal.com/#demo" target="_blank" rel="noopener noreferrer" class="nav-link-demo">Get a demo</a>
+      <a href="https://app.godelterminal.com/?page=login" target="_blank" class="fc-nav-secondary">Login</a>
+      <a href="https://app.godelterminal.com/?page=register" target="_blank" class="btn-mint-glow">Sign Up</a>
+    </div>
+  </header>
+
+  <!-- HERO (CENTERED QUARTR-STYLE) -->
+  <section class="hero">
+    <div class="container hero-animate-text">
+      <h1>
+        A real terminal for every desk.<br>
+        <span>Clean data for every model.</span>
+      </h1>
+      <p>
+        Multi-asset coverage across global equities, futures, options, FX, commodities, and defi assets. Use across desktop, web, mobile, and direct via WebSocket.
+      </p>
+
+      <div class="hero-actions">
+        <!-- EXACT MINT GLOW ANIMATION BUTTON AS SIGNUP -->
+        <a href="https://app.godelterminal.com/?page=login" target="_blank" rel="noopener noreferrer" class="btn-mint-glow hero-cta">Explore Godel →</a>
+        <a href="https://platform.godelterminal.com/" target="_blank" rel="noopener noreferrer" class="btn-secondary-action">
+          Explore Developer API ↗
+        </a>
+      </div>
+
+      <!-- FULL-VIEW PRODUCT SHOWCASE (DIRECTLY BELOW HERO CTAs, NO CAPTION) -->
+      <div class="showcase-wrapper hero-animate-showcase">
+        <div class="showcase-glow"></div>
+        <div class="showcase-frame" id="hero-video-frame">
+          <video 
+            id="hero-video"
+            src="assets/herobannerv3.mp4" 
+            playsinline 
+            muted 
+            loop 
+            autoplay
+            preload="auto">
+          </video>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LOGO CAROUSEL / SOCIAL PROOF PLACEHOLDER -->
+  <section class="logo-marquee-section">
+    <div class="container">
+      <div class="marquee-label">Trusted by traders, analysts & builders across 50+ institutional desks</div>
+    </div>
+    <div class="marquee-wrap">
+      <!-- Track 1 (Original) -->
+      <div class="marquee-track">
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+      </div>
+      <!-- Track 2 (Duplicate for continuous loop) -->
+      <div class="marquee-track" aria-hidden="true">
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+        <div class="logo-item">logo goes here</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE REAL COST STRIP (MOVED ABOVE PRODUCTS) -->
+  <section class="cost-strip" id="economics">
+    <div class="container cost-grid">
+      <div class="cost-left">
+        <div class="sec-sub">The Real Cost</div>
+        <h3>Equip your entire team for the cost of a single legacy terminal.</h3>
+        <p>
+          At ~$27,000 a seat, legacy terminals force teams to share logins. At $1,500/year, Godel equips your entire team for the same cost.
+        </p>
+      </div>
+
+      <div class="cost-comparison-card">
+        <div class="cost-bar-row">
+          <div class="cost-bar-label">
+            <span style="color:var(--text-muted);">Legacy Terminal (Bloomberg / FactSet)</span>
+            <strong style="color:var(--red); font-family:var(--font-mono);">$27,000 / seat / yr</strong>
+          </div>
+          <div class="cost-bar-wrap">
+            <div class="cost-bar-fill-red"></div>
+          </div>
+          <span style="font-size:11px; color:var(--text-dim);">1 analyst or trader equipped</span>
+        </div>
+
+        <div class="cost-bar-row">
+          <div class="cost-bar-label">
+            <span style="color:#fff;">Godel Terminal</span>
+            <strong style="color:var(--brand-mint); font-family:var(--font-mono);">$1,500 / seat / yr</strong>
+          </div>
+          <div class="cost-bar-wrap">
+            <div class="cost-bar-fill-green"></div>
+          </div>
+          <span style="font-size:11px; color:var(--brand-mint);">18 analysts equipped for the exact same budget</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIFURCATION CARDS -->
+  <section class="bifurcation" id="offerings">
+    <div class="container">
+      
+      <div class="sec-header">
+        <div class="sec-sub">Our Products</div>
+        <div class="sec-title">Two ways to put Godel to work</div>
+      </div>
+
+      <div class="cards-grid">
+        
+        <!-- CARD 1: TERMINAL -->
+        <div class="product-card" id="terminal">
+          <div class="card-top">
+            <h3 class="card-title">Godel Terminal</h3>
+            <p class="card-p">
+              The modern financial workspace for hedge funds, wealth managers, and prop desks. 50+ commands, real-time multi-asset data, and news filtered directly to your book.
+            </p>
+
+            <!-- KISS Concept Graphic: 5x3 Symmetrical Command Matrix Flowing Into Center Godel G -->
+            <div class="concept-stage">
+              <div class="cmd-tree-stage">
+                
+                <!-- Every Command Flows Strictly Inward Toward the Center G (5 Select Animated Pulses) -->
+                <svg class="cmd-tree-svg" viewBox="0 0 500 260" preserveAspectRatio="none">
+                  
+                  <!-- 1. BASE SOLID GREEN CIRCUIT NETWORK (5-5-4 Staggered Symmetrical Convergence) -->
+                  <!-- LEFT OUTER: ALLQ (80,39) & G (80,90) -> Alley 1 (x=122.5) -> shifts right at y=115.5 into x=165 trunk -->
+                  <path class="cmd-wire-base" d="M 80 39 V 58.5 Q 80 64.5 86 64.5 H 116.5 Q 122.5 64.5 122.5 70.5 V 109.5 Q 122.5 115.5 128.5 115.5 H 159 Q 165 115.5 165 121.5 V 170 Q 165 178 173 178 H 242 Q 250 178 250 186 V 196" />
+                  <path class="cmd-wire-base" d="M 80 90 V 109.5 Q 80 115.5 86 115.5 H 128.5" />
+                  <!-- ANR (165,90) feeds straight down into the x=165 trunk -->
+                  <path class="cmd-wire-base" d="M 165 90 V 121.5" />
+                  <!-- ECO (122.5,141) steps right into the x=165 trunk -->
+                  <path class="cmd-wire-base" d="M 122.5 141 V 156 Q 122.5 162 128.5 162 H 159 Q 165 162 165 168" />
+
+                  <!-- LEFT INNER: DES (165,39) -> Alley 2 (x=207.5) -> shifts right at y=115.5 into Center Spine (x=250) -->
+                  <path class="cmd-wire-base" d="M 165 39 V 58.5 Q 165 64.5 171 64.5 H 201.5 Q 207.5 64.5 207.5 70.5 V 109.5 Q 207.5 115.5 213.5 115.5 H 244 Q 250 115.5 250 121.5" />
+                  <!-- N (207.5,141) steps right into Center Spine (x=250) -->
+                  <path class="cmd-wire-base" d="M 207.5 141 V 156 Q 207.5 162 213.5 162 H 244 Q 250 162 250 168" />
+
+                  <!-- CENTER SPINE: TOP (250,39) & EQS (250,90) -> straight down x=250 into G -->
+                  <path class="cmd-wire-base" d="M 250 39 V 196" />
+
+                  <!-- RIGHT INNER: WEI (335,39) -> Alley 3 (x=292.5) -> shifts left at y=115.5 into Center Spine (x=250) -->
+                  <path class="cmd-wire-base" d="M 335 39 V 58.5 Q 335 64.5 329 64.5 H 298.5 Q 292.5 64.5 292.5 70.5 V 109.5 Q 292.5 115.5 286.5 115.5 H 256 Q 250 115.5 250 121.5" />
+                  <!-- OMON (292.5,141) steps left into Center Spine (x=250) -->
+                  <path class="cmd-wire-base" d="M 292.5 141 V 156 Q 292.5 162 286.5 162 H 256 Q 250 162 250 168" />
+
+                  <!-- RIGHT OUTER: RES (420,39) & HDS (420,90) -> Alley 4 (x=377.5) -> shifts left at y=115.5 into x=335 trunk -->
+                  <path class="cmd-wire-base" d="M 420 39 V 58.5 Q 420 64.5 414 64.5 H 383.5 Q 377.5 64.5 377.5 70.5 V 109.5 Q 377.5 115.5 371.5 115.5 H 341 Q 335 115.5 335 121.5 V 170 Q 335 178 327 178 H 258 Q 250 178 250 186 V 196" />
+                  <path class="cmd-wire-base" d="M 420 90 V 109.5 Q 420 115.5 414 115.5 H 371.5" />
+                  <!-- FA (335,90) feeds straight down into the x=335 trunk -->
+                  <path class="cmd-wire-base" d="M 335 90 V 121.5" />
+                  <!-- +50 (377.5,141) steps left into the x=335 trunk -->
+                  <path class="cmd-wire-base" d="M 377.5 141 V 156 Q 377.5 162 371.5 162 H 341 Q 335 162 335 168" />
+
+                  <!-- 2. SLOW, TINY FLOWING PULSES ON 5 SELECT PATHS INTO THE CENTER -->
+                  <!-- Pulse 1: Left-Outer (from G at 80,90) -->
+                  <path class="cmd-wire-flow" d="M 80 90 V 109.5 Q 80 115.5 86 115.5 H 159 Q 165 115.5 165 121.5 V 170 Q 165 178 173 178 H 242 Q 250 178 250 186 V 196" pathLength="100" />
+                  <!-- Pulse 2: Left-Inner (from DES at 165,39) -->
+                  <path class="cmd-wire-flow delay-1" d="M 165 39 V 58.5 Q 165 64.5 171 64.5 H 201.5 Q 207.5 64.5 207.5 70.5 V 109.5 Q 207.5 115.5 213.5 115.5 H 244 Q 250 115.5 250 121.5 V 196" pathLength="100" />
+                  <!-- Pulse 3: Center Spine (from EQS at 250,90) -->
+                  <path class="cmd-wire-flow delay-2" d="M 250 90 V 196" pathLength="100" />
+                  <!-- Pulse 4: Right-Inner (from OMON at 292.5,141) -->
+                  <path class="cmd-wire-flow delay-3" d="M 292.5 141 V 156 Q 292.5 162 286.5 162 H 256 Q 250 162 250 168 V 196" pathLength="100" />
+                  <!-- Pulse 5: Right-Outer (from RES at 420,39) -->
+                  <path class="cmd-wire-flow delay-4" d="M 420 39 V 58.5 Q 420 64.5 414 64.5 H 383.5 Q 377.5 64.5 377.5 70.5 V 109.5 Q 377.5 115.5 371.5 115.5 H 341 Q 335 115.5 335 121.5 V 170 Q 335 178 327 178 H 258 Q 250 178 250 186 V 196" pathLength="100" />
+                </svg>
+
+                <!-- Row 1 (y = 39 / 15%) — 5 Commands -->
+                <div class="cmd-node-pill" style="left: 16%; top: 15%;">ALLQ</div>
+                <div class="cmd-node-pill" style="left: 33%; top: 15%;">DES</div>
+                <div class="cmd-node-pill" style="left: 50%; top: 15%;">TOP</div>
+                <div class="cmd-node-pill" style="left: 67%; top: 15%;">WEI</div>
+                <div class="cmd-node-pill" style="left: 84%; top: 15%;">RES</div>
+
+                <!-- Row 2 (y = 90 / 34.6%) — 5 Commands -->
+                <div class="cmd-node-pill" style="left: 16%; top: 34.6%;">G</div>
+                <div class="cmd-node-pill" style="left: 33%; top: 34.6%;">ANR</div>
+                <div class="cmd-node-pill" style="left: 50%; top: 34.6%;">EQS</div>
+                <div class="cmd-node-pill" style="left: 67%; top: 34.6%;">FA</div>
+                <div class="cmd-node-pill" style="left: 84%; top: 34.6%;">HDS</div>
+
+                <!-- Row 3 (y = 141 / 54.2%) — 4 Centered Commands -->
+                <div class="cmd-node-pill" style="left: 24.5%; top: 54.2%;">ECO</div>
+                <div class="cmd-node-pill" style="left: 41.5%; top: 54.2%;">N</div>
+                <div class="cmd-node-pill" style="left: 58.5%; top: 54.2%;">OMON</div>
+                <div class="cmd-node-pill cmd-node-more" style="left: 75.5%; top: 54.2%;">+50</div>
+
+                <!-- Bottom Center: Official Godel G Hub (White G on Black) -->
+                <div class="cmd-g-hub" title="Godel Terminal">
+                  <svg viewBox="0 0 84 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M47.5973 56.0796L34.8346 78.825H49.8343L80.4184 24.3134H38.3092L31.2921 36.1375H58.7892L54.2336 44.2487H14.0486L32.21 11.8852H75.3936L82.4107 0.0611384L30.721 0.00683594C26.4985 0.00683594 22.6024 2.2807 20.5353 5.95961L1.38798 40.0879C-2.63052 47.2489 2.55749 56.0864 10.7781 56.0864H47.5973V56.0796Z" fill="#FFFFFF"/>
+                  </svg>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="card-bottom">
+            <div class="card-meta">
+              <strong>$1,500 / seat / year</strong><br>
+              Flat pricing. No multi-year lock-in.
+            </div>
+            <div class="card-actions-group">
+              <a href="https://app.godelterminal.com/?page=register" target="_blank" rel="noopener noreferrer" class="btn-mint-glow">Try it Now →</a>
+              <a href="https://godelterminal.com/#demo" target="_blank" rel="noopener noreferrer" class="card-sub-link">or contact sales / get a demo</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: API -->
+        <div class="product-card" id="api">
+          <div class="card-top">
+            <h3 class="card-title">Godel API</h3>
+            <p class="card-p">
+              Direct sub-second WebSocket feeds and standardized REST JSON for quants, fintech startups, and AI builders. Live quotes, trades, SEC filings, and more.
+            </p>
+
+            <!-- Code Terminal Window -->
+            <div class="card-media-slot" style="padding: 0; align-items: stretch; justify-content: stretch;">
+              <div class="api-code-window">
+                <div class="api-code-header">
+                  <div class="api-code-dots">
+                    <span class="api-code-dot red"></span>
+                    <span class="api-code-dot yellow"></span>
+                    <span class="api-code-dot green"></span>
+                  </div>
+                  <span class="api-code-badge">cURL / REST v1</span>
+                </div>
+                <div class="api-code-body">
+                  <div class="api-code-line"><span class="token-cmd">curl</span> <span class="token-flag">-X</span> <span class="token-method">POST</span> <span class="token-url">"https://api.godelterminal.com/api/v1/aggregates"</span> \</div>
+                  <div class="api-code-line">  <span class="token-flag">-H</span> <span class="token-header">"Authorization: Bearer <span class="token-key">&lt;YOUR_API_KEY&gt;</span>"</span> \</div>
+                  <div class="api-code-line">  <span class="token-flag">-H</span> <span class="token-header">"Content-Type: application/json"</span> \</div>
+                  <div class="api-code-line">  <span class="token-flag">-d</span> '{</div>
+                  <div class="api-code-line">    <span class="token-json-key">"seriesId"</span>: <span class="token-json-val">2834684</span>,</div>
+                  <div class="api-code-line">    <span class="token-json-key">"resolution"</span>: <span class="token-json-str">"1M"</span>,</div>
+                  <div class="api-code-line">    <span class="token-json-key">"from"</span>: <span class="token-json-val">1758672000</span>, <span class="token-json-key">"to"</span>: <span class="token-json-val">1790208000</span></div>
+                  <div class="api-code-line">  }'</div>
+                  <div class="api-code-line token-comment"># sub-second aggregates · global tick data</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-bottom">
+            <div class="card-meta">
+              <strong>Developer Tiers Available</strong><br>
+              Transparent usage. Sub-second feeds.
+            </div>
+            <div class="card-actions-group">
+              <a href="https://platform.godelterminal.com/" target="_blank" rel="noopener noreferrer" class="btn-secondary-action">
+                Open Developer Platform ↗
+              </a>
+              <a href="https://godelterminal.com/#demo" target="_blank" rel="noopener noreferrer" class="card-sub-link">or contact sales / get a demo</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ARIES BROKERAGE PARTNERSHIP -->
+  <section class="aries-section">
+    <div class="container">
+      <div class="aries-card">
+        <div>
+          <h2>See it. Research it. <span class="aries-accent">Trade it.</span></h2>
+          <p>
+            Godel Terminal gives you the data. Aries lets you act on it. Trade stocks, ETFs, and options seamlessly through our integrated brokerage partner.
+          </p>
+          <div class="aries-features">
+            <span class="aries-feature-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Stocks & ETFs
+            </span>
+            <span class="aries-feature-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Options trading
+            </span>
+            <span class="aries-feature-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Full API & SDK
+            </span>
+          </div>
+          <div class="aries-cta-group">
+            <a href="https://aries.com" target="_blank" rel="noopener noreferrer" class="btn-mint-glow" style="padding: 11px 24px; font-size: 14px;">Start trading with Aries →</a>
+            <a href="https://help.aries.com/hc/en-us/categories/24780938315164-Pricing-Fee-Schedule" target="_blank" rel="noopener noreferrer" class="card-sub-link">View fee schedule</a>
+          </div>
+        </div>
+
+        <div class="aries-right-panel">
+          <div class="aries-logo-wrap">
+            <svg viewBox="0 0 266 52" fill="#fff" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+              <path d="M60 50.498C44.848 53.4441 35.2337 46.1184 32 40.4411C27.8424 33.5362 29.83 26.6268 35.5091 23.9981C39.4848 22.1579 44.0091 21.4981 49.0091 20.9981C44.0091 22.4981 41.0774 24.9371 39.8077 30.3141C37.9599 38.1396 49.9707 45.0444 58.7477 40.4411C67.5248 35.8378 70.7585 23.8694 61.9814 16.9648C55.0077 11.4789 42 10.998 31.0306 16.9648C23.6394 20.8008 11.8696 27.8984 11.5 36C11.1304 44.1016 23.1774 49.9542 30.1067 49.6474C19.1738 51.949 0 47.387 0 34.4981C0 16.0851 32.8784 -5.5911 58.7477 1.31382C79.9811 6.98134 81.0755 24.4832 79.5356 32.6155C78.6117 38.5997 75.152 47.552 60 50.498Z"/>
+              <path d="M88.0088 45.3622L102.26 7.63392H112.988L127.081 45.3622H116.143L105.678 13.3038H109.464L98.7366 45.3622H88.0088ZM97.2642 39.0035V30.7372H118.194V39.0035H97.2642Z"/>
+              <path d="M144.636 30.3133V23.0008H150.999C152.437 23.0008 153.523 22.6475 154.26 21.941C155.031 21.2345 155.417 20.2983 155.417 19.1326C155.417 17.9668 155.031 17.0307 154.26 16.3241C153.523 15.6176 152.437 15.2644 150.999 15.2644H144.636V7.63392H152.682C155.276 7.63392 157.555 8.11082 159.518 9.06462C161.482 10.0184 163.024 11.3432 164.146 13.0388C165.268 14.7345 165.829 16.7127 165.829 18.9736C165.829 21.2345 165.25 23.2127 164.093 24.9084C162.972 26.604 161.394 27.9288 159.361 28.8826C157.327 29.8364 154.926 30.3133 152.156 30.3133H144.636ZM136.117 45.3622V7.63392H146.634V45.3622H136.117ZM156.31 45.3622L146.109 29.2535L155.574 27.1869L168.248 45.3622H156.31Z"/>
+              <path d="M177.318 45.3622V7.63392H187.835V45.3622H177.318Z"/>
+              <path d="M199.566 45.3622V7.63392H210.084V45.3622H199.566ZM208.086 45.3622V36.566H228.174V45.3622H208.086ZM208.086 30.4192V21.835H226.228V30.4192H208.086ZM208.086 16.4301V7.63392H227.858V16.4301H208.086Z"/>
+              <path d="M250.39 45.998C247.2 45.998 244.413 45.5388 242.029 44.6203C239.68 43.6665 237.506 42.1652 235.508 40.1163L242.082 33.4926C243.449 34.7997 244.886 35.8065 246.394 36.513C247.901 37.1842 249.514 37.5198 251.232 37.5198C252.669 37.5198 253.756 37.3078 254.492 36.8839C255.228 36.4247 255.596 35.8065 255.596 35.0293C255.596 34.2521 255.281 33.6163 254.65 33.1217C254.019 32.5918 253.177 32.1326 252.126 31.744C251.109 31.3201 249.97 30.8961 248.708 30.4722C247.481 30.0483 246.253 29.5361 245.026 28.9355C243.799 28.335 242.66 27.6108 241.608 26.763C240.592 25.8798 239.768 24.8024 239.137 23.5307C238.506 22.2236 238.19 20.6339 238.19 18.7616C238.19 16.3241 238.769 14.2222 239.925 12.4559C241.082 10.6896 242.713 9.34723 244.816 8.42875C246.92 7.47495 249.391 6.99805 252.231 6.99805C255.036 6.99805 257.63 7.45729 260.014 8.37577C262.433 9.25892 264.431 10.5307 266.009 12.191L259.383 18.8146C258.226 17.6842 257.069 16.854 255.912 16.3241C254.755 15.7589 253.493 15.4763 252.126 15.4763C251.039 15.4763 250.162 15.6529 249.496 16.0062C248.865 16.3595 248.55 16.8894 248.55 17.5959C248.55 18.3377 248.865 18.9559 249.496 19.4505C250.127 19.9097 250.951 20.3336 251.968 20.7222C253.02 21.1108 254.159 21.5171 255.386 21.941C256.648 22.3649 257.893 22.8771 259.12 23.4777C260.347 24.0429 261.469 24.7847 262.485 25.7032C263.537 26.5864 264.379 27.6991 265.01 29.0415C265.641 30.3839 265.956 32.0089 265.956 33.9165C265.956 37.7671 264.589 40.7521 261.854 42.8717C259.155 44.9559 255.334 45.998 250.39 45.998Z"/>
+            </svg>
+          </div>
+          <div class="aries-trust-badges">
+            <div class="aries-trust-badge">
+              <span class="badge-value">FINRA</span>
+              <span class="badge-label">Member</span>
+            </div>
+            <div class="aries-trust-badge">
+              <span class="badge-value">$500K</span>
+              <span class="badge-label">SIPC Coverage</span>
+            </div>
+            <div class="aries-trust-badge">
+              <span class="badge-value">$0</span>
+              <span class="badge-label">Stock Commission</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL QUOTE (QUARTR STYLE) -->
+  <section class="quote-section">
+    <div class="container">
+
+      <!-- Section Headline sitting close to testimonial -->
+      <div class="quote-section-intro">
+        <h2 class="stats-headline">
+          Where legacy terminals fall short—and what active managers say about Godel.
+        </h2>
+      </div>
+
+      <div class="quote-grid">
+        <div class="quote-media-wrap">
+          <img src="assets/thomas-george-color.jpg" alt="Thomas George, Portfolio Manager, DARP ETF" loading="lazy">
+        </div>
+        <div class="quote-content">
+          <blockquote>
+            <p>“Godel was not just a good replacement for our terminal. It’s exceptional. It’s clearly built by people who understand that news drives stocks.”</p>
+          </blockquote>
+          <div class="quote-meta-name">Thomas George</div>
+          <div class="quote-meta-role">Portfolio Manager, DARP ETF · Grizzle</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MOBILE APP SHOWCASE SECTION (QUARTR STYLE) -->
+  <section class="mobile-showcase-section">
+    <div class="mobile-header">
+      <h2 class="mobile-headline">Stay ahead, from anywhere</h2>
+      <p class="mobile-sub">
+        The full Godel Terminal in your pocket. Live team chat channels, instant alerts, and real-time feeds on iOS.
+      </p>
+      <div class="mobile-meta-row">
+        <div class="mobile-rating">
+          <span class="mobile-stars">★★★★★</span>
+          <span>4.9/5</span>
+        </div>
+        <a href="#mobile-app" class="mobile-link">
+          Get Godel Mobile <span>›</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- PHONE STAGE FLUSH AT BOTTOM BORDER -->
+    <div class="phone-stage">
+      <div class="iphone-frame">
+        <div class="iphone-screen">
+          
+          <!-- Status Bar Row: Time (left), Island (center), 3 Icons (right) evenly centered -->
+          <div class="iphone-status-bar">
+            <div class="status-left-wing">
+              <span class="iphone-status-time">4:31</span>
+            </div>
+
+            <!-- Dynamic Island -->
+            <div class="dynamic-island">
+              <div class="island-camera"></div>
+            </div>
+
+            <div class="status-right-wing">
+              <div class="iphone-status-icons">
+                <!-- Cellular: High-fidelity Apple 4-bar staircase -->
+                <svg width="15" height="11" viewBox="0 0 17 12" fill="none">
+                  <rect x="0.5" y="8" width="2.8" height="4" rx="0.8" fill="#ffffff"/>
+                  <rect x="5" y="5.3" width="2.8" height="6.7" rx="0.8" fill="#ffffff"/>
+                  <rect x="9.5" y="2.7" width="2.8" height="9.3" rx="0.8" fill="#ffffff"/>
+                  <rect x="14" y="0" width="2.8" height="12" rx="0.8" fill="#ffffff"/>
+                </svg>
+
+                <!-- 5G Badge -->
+                <span class="status-5g">5G</span>
+
+                <!-- Battery: Crisp Apple rounded battery with charge fill & terminal cap -->
+                <svg width="22" height="11.5" viewBox="0 0 25 12" fill="none">
+                  <rect x="0.75" y="0.75" width="20.5" height="10.5" rx="3.5" stroke="#ffffff" stroke-width="1.3"/>
+                  <rect x="2.6" y="2.6" width="13.2" height="6.8" rx="1.6" fill="#ffffff"/>
+                  <path d="M22.8 4.3C23.6 4.7 24 5.3 24 6C24 6.7 23.6 7.3 22.8 7.7" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lock Screen Clock -->
+          <div class="lock-date">Thursday 12 September</div>
+          <div class="lock-time">4:31</div>
+
+          <!-- Notification Center -->
+          <div class="notification-center">
+            <div class="notification-bar-header">
+              <span>Notification Center</span>
+              <span class="nc-clear">✕</span>
+            </div>
+
+            <!-- Card 1: Price Alert (Just now) -->
+            <div class="ios-notification">
+              <div class="app-icon-squircle">
+                <img src="assets/godel-app-icon.png" alt="Godel">
+              </div>
+              <div class="notif-text">
+                <div class="notif-title">Price Alert</div>
+                <div class="notif-subtitle">$ADBE - Down 5.1% to $486.20</div>
+              </div>
+              <div class="notif-right-col">
+                <span class="notif-time">Just now</span>
+                <div class="notif-thumbnail">
+                  <img src="assets/adobe-logo.png" alt="Adobe">
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Chat - #software (1m ago, no chat icon) -->
+            <div class="ios-notification no-thumb">
+              <div class="app-icon-squircle">
+                <img src="assets/godel-app-icon.png" alt="Godel">
+              </div>
+              <div class="notif-text">
+                <div class="notif-title">Chat - #software</div>
+                <div class="notif-subtitle">@alex: adbe lowered full-year revenue forecast</div>
+              </div>
+              <div class="notif-right-col">
+                <span class="notif-time">1m ago</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Earnings - $ADBE (2m ago) -->
+            <div class="ios-notification">
+              <div class="app-icon-squircle">
+                <img src="assets/godel-app-icon.png" alt="Godel">
+              </div>
+              <div class="notif-text">
+                <div class="notif-title">Earnings - $ADBE</div>
+                <div class="notif-subtitle">Q3 EPS $6.13 (beat by +0.7%), Revenue $6.69B (+12% YoY)</div>
+              </div>
+              <div class="notif-right-col">
+                <span class="notif-time">2m ago</span>
+                <div class="notif-thumbnail">
+                  <img src="assets/adobe-logo.png" alt="Adobe">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKFLOW & CONTENT CAROUSEL -->
+  <section class="content-carousel-section" id="capabilities">
+    <div class="container">
+      <div class="carousel-header-row">
+        <div class="carousel-title-group">
+          <h2>Capabilities & Workflows</h2>
+          <p>Explore our core product features and workflows across institutional desks.</p>
+        </div>
+        <div class="carousel-nav-buttons">
+          <button class="carousel-nav-btn" id="carousel-prev" aria-label="Previous">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button class="carousel-nav-btn" id="carousel-next" aria-label="Next">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="carousel-track-container" id="carousel-track-container">
+        <div class="carousel-track">
+          
+          <!-- CARD 6: WEALTH TEAMS & FAMILY OFFICES (KISS: Customer Title Only + Simple Multi-Desk Visual) -->
+          <a href="https://godelterminal.com/wealth-teams-family-offices/" class="carousel-card">
+            <div class="carousel-card-media">
+              <svg class="kiss-emblem" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer Profile Card -->
+                <rect x="52" y="42" width="216" height="156" rx="10" fill="#0A0D12" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/>
+                <!-- Header: Persona Avatar + Customer Title Only -->
+                <rect x="68" y="55" width="26" height="26" rx="6" fill="#0B1318" stroke="rgba(51,226,154,0.48)" stroke-width="1.2"/>
+                <circle cx="81" cy="64.5" r="3.2" stroke="#33E29A" stroke-width="1.4"/>
+                <path d="M75 75C75 72.2 77.7 70.5 81 70.5C84.3 70.5 87 72.2 87 75" stroke="#33E29A" stroke-width="1.4" stroke-linecap="round"/>
+                <text x="104" y="72.5" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">RIA &amp; Family Office</text>
+                <line x1="68" y1="92" x2="252" y2="92" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+                <!-- Simple Graphic: 3 Equipped Client / Advisor Desks Side-by-Side (Zero Text) -->
+                <!-- Mini Card 1 (Highlighted) -->
+                <rect x="68" y="106" width="56" height="76" rx="6" fill="#0B1318" stroke="rgba(51,226,154,0.48)" stroke-width="1.2"/>
+                <circle cx="80" cy="120" r="2.8" fill="#33E29A"/>
+                <rect x="88" y="117.5" width="24" height="5" rx="2.5" fill="#33E29A" fill-opacity="0.85"/>
+                <rect x="76" y="136" width="40" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
+                <rect x="76" y="148" width="30" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="76" y="160" width="34" height="4" rx="2" fill="rgba(51,226,154,0.35)"/>
+
+                <!-- Mini Card 2 -->
+                <rect x="132" y="106" width="56" height="76" rx="6" fill="rgba(255,255,255,0.015)" stroke="rgba(51,226,154,0.28)" stroke-width="1.1"/>
+                <circle cx="144" cy="120" r="2.8" fill="#33E29A" fill-opacity="0.75"/>
+                <rect x="152" y="117.5" width="24" height="5" rx="2.5" fill="rgba(51,226,154,0.5)"/>
+                <rect x="140" y="136" width="40" height="4" rx="2" fill="rgba(255,255,255,0.14)"/>
+                <rect x="140" y="148" width="28" height="4" rx="2" fill="rgba(255,255,255,0.10)"/>
+                <rect x="140" y="160" width="34" height="4" rx="2" fill="rgba(255,255,255,0.10)"/>
+
+                <!-- Mini Card 3 -->
+                <rect x="196" y="106" width="56" height="76" rx="6" fill="rgba(255,255,255,0.015)" stroke="rgba(51,226,154,0.28)" stroke-width="1.1"/>
+                <circle cx="208" cy="120" r="2.8" fill="#33E29A" fill-opacity="0.75"/>
+                <rect x="216" y="117.5" width="24" height="5" rx="2.5" fill="rgba(51,226,154,0.5)"/>
+                <rect x="204" y="136" width="40" height="4" rx="2" fill="rgba(255,255,255,0.14)"/>
+                <rect x="204" y="148" width="32" height="4" rx="2" fill="rgba(255,255,255,0.10)"/>
+                <rect x="204" y="160" width="26" height="4" rx="2" fill="rgba(255,255,255,0.10)"/>
+              </svg>
+            </div>
+            <div class="carousel-card-body">
+              <div class="carousel-card-title">Wealth Teams &amp; Family Offices</div>
+              <div class="carousel-card-desc">Equip every advisor on the desk without paying $27k/seat legacy fees.</div>
+            </div>
+          </a>
+
+          <!-- CARD 7: HEDGE FUNDS & PORTFOLIO MANAGERS (KISS: Customer Title Only + Alpha Spread Visual) -->
+          <a href="https://godelterminal.com/hedge-funds-portfolio-managers/" class="carousel-card">
+            <div class="carousel-card-media">
+              <svg class="kiss-emblem" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer Profile Card -->
+                <rect x="52" y="42" width="216" height="156" rx="10" fill="#0A0D12" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/>
+                <!-- Header: Persona Avatar + Customer Title Only -->
+                <rect x="68" y="55" width="26" height="26" rx="6" fill="#0B1318" stroke="rgba(51,226,154,0.48)" stroke-width="1.2"/>
+                <circle cx="81" cy="64.5" r="3.2" stroke="#33E29A" stroke-width="1.4"/>
+                <path d="M75 75C75 72.2 77.7 70.5 81 70.5C84.3 70.5 87 72.2 87 75" stroke="#33E29A" stroke-width="1.4" stroke-linecap="round"/>
+                <text x="104" y="72.5" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">Portfolio Manager</text>
+                <line x1="68" y1="92" x2="252" y2="92" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+                <!-- Simple Graphic: Benchmark vs Alpha Outperformance Curve (Zero Text) -->
+                <rect x="68" y="106" width="184" height="76" rx="6" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                <!-- Muted Benchmark Line -->
+                <path d="M 82 162 L 116 156 L 150 159 L 186 150 L 234 146" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round"/>
+                <!-- Mint Alpha Line -->
+                <path d="M 82 162 L 116 146 L 150 150 L 186 126 L 234 118" stroke="#33E29A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="234" cy="118" r="7" fill="rgba(51,226,154,0.16)"/>
+                <circle cx="234" cy="118" r="3.2" fill="#33E29A"/>
+              </svg>
+            </div>
+            <div class="carousel-card-body">
+              <div class="carousel-card-title">Hedge Funds &amp; Portfolio Managers</div>
+              <div class="carousel-card-desc">Fast idea generation, filings search, and news screening built for alpha.</div>
+            </div>
+          </a>
+
+          <!-- CARD 8: EQUITY RESEARCH (KISS: Customer Title Only + Filings-to-Bars Visual) -->
+          <a href="https://godelterminal.com/equity-research/" class="carousel-card">
+            <div class="carousel-card-media">
+              <svg class="kiss-emblem" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer Profile Card -->
+                <rect x="52" y="42" width="216" height="156" rx="10" fill="#0A0D12" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/>
+                <!-- Header: Persona Avatar + Customer Title Only -->
+                <rect x="68" y="55" width="26" height="26" rx="6" fill="#0B1318" stroke="rgba(51,226,154,0.48)" stroke-width="1.2"/>
+                <circle cx="81" cy="64.5" r="3.2" stroke="#33E29A" stroke-width="1.4"/>
+                <path d="M75 75C75 72.2 77.7 70.5 81 70.5C84.3 70.5 87 72.2 87 75" stroke="#33E29A" stroke-width="1.4" stroke-linecap="round"/>
+                <text x="104" y="72.5" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">Research Analyst</text>
+                <line x1="68" y1="92" x2="252" y2="92" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+                <!-- Simple Graphic: Left Model Rows + Right Quarterly Bars (Zero Text) -->
+                <!-- Left: 3 Clean Model Rows -->
+                <rect x="68" y="108" width="82" height="20" rx="5" fill="#0B1318" stroke="rgba(51,226,154,0.48)" stroke-width="1.2"/>
+                <rect x="78" y="115.5" width="48" height="5" rx="2.5" fill="#33E29A"/>
+                <rect x="68" y="135" width="82" height="18" rx="5" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                <rect x="78" y="142" width="56" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
+                <rect x="68" y="160" width="82" height="18" rx="5" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                <rect x="78" y="167" width="40" height="4" rx="2" fill="rgba(255,255,255,0.14)"/>
+
+                <!-- Right: 4 Ascending Fundamental Bars -->
+                <rect x="166" y="150" width="16" height="28" rx="3" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+                <rect x="188" y="138" width="16" height="40" rx="3" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+                <rect x="210" y="124" width="16" height="54" rx="3" fill="rgba(51,226,154,0.10)" stroke="rgba(51,226,154,0.35)" stroke-width="1.1"/>
+                <rect x="232" y="108" width="16" height="70" rx="3" fill="#0B1318" stroke="#33E29A" stroke-width="1.3"/>
+              </svg>
+            </div>
+            <div class="carousel-card-body">
+              <div class="carousel-card-title">Equity Research Analysts</div>
+              <div class="carousel-card-desc">Interactive financial models, historical transcripts, and earnings comps.</div>
+            </div>
+          </a>
+
+          <!-- CARD 5: ASSET CLASSES & DATA COVERAGE (KISS: Clean 4-row stacked list of global asset classes) -->
+          <a href="https://godelterminal.com/asset-classes-data-coverage/" class="carousel-card">
+            <div class="carousel-card-media">
+              <svg class="kiss-emblem" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Row 1: Equities -->
+                <rect x="64" y="48" width="192" height="30" rx="6" fill="#0B1318" stroke="rgba(51,226,154,0.45)" stroke-width="1.2"/>
+                <circle cx="80" cy="63" r="3" fill="#33E29A"/>
+                <text x="92" y="67" fill="#E2E8F0" font-family="Inter, sans-serif" font-size="11.5" font-weight="500">Global Equities</text>
+                <rect x="212" y="59" width="32" height="8" rx="4" fill="rgba(51,226,154,0.18)"/>
+
+                <!-- Row 2: Options & Futures -->
+                <rect x="64" y="86" width="192" height="30" rx="6" fill="#0A0D12" stroke="rgba(255,255,255,0.10)" stroke-width="1.1"/>
+                <circle cx="80" cy="101" r="3" fill="#33E29A" fill-opacity="0.7"/>
+                <text x="92" y="105" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5" font-weight="500">Options &amp; Futures</text>
+                <rect x="218" y="97" width="26" height="8" rx="4" fill="rgba(255,255,255,0.08)"/>
+
+                <!-- Row 3: Commodities -->
+                <rect x="64" y="124" width="192" height="30" rx="6" fill="#0A0D12" stroke="rgba(255,255,255,0.10)" stroke-width="1.1"/>
+                <circle cx="80" cy="139" r="3" fill="#33E29A" fill-opacity="0.7"/>
+                <text x="92" y="143" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5" font-weight="500">Commodities</text>
+                <rect x="222" y="135" width="22" height="8" rx="4" fill="rgba(255,255,255,0.08)"/>
+
+                <!-- Row 4: FX & Fixed Income -->
+                <rect x="64" y="162" width="192" height="30" rx="6" fill="#0A0D12" stroke="rgba(255,255,255,0.10)" stroke-width="1.1"/>
+                <circle cx="80" cy="177" r="3" fill="#33E29A" fill-opacity="0.7"/>
+                <text x="92" y="181" fill="#94A3B8" font-family="Inter, sans-serif" font-size="11.5" font-weight="500">FX &amp; Fixed Income</text>
+                <rect x="216" y="173" width="28" height="8" rx="4" fill="rgba(255,255,255,0.08)"/>
+              </svg>
+            </div>
+            <div class="carousel-card-body">
+              <div class="carousel-card-title">Asset Classes & Data Coverage</div>
+              <div class="carousel-card-desc">Deep coverage across global equities, fixed income, commodities, and derivatives.</div>
+            </div>
+          </a>
+
+          <!-- CARD 1: REAL-TIME NEWS (KISS: 3-bar news wire with live top pulse) -->
+          <a href="https://godelterminal.com/real-time-market-news/" class="carousel-card">
+            <div class="carousel-card-media">
+              <svg class="kiss-emblem" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer wire frame -->
+                <rect x="52" y="48" width="216" height="144" rx="10" fill="#0A0D12" stroke="rgba(255,255,255,0.08)" stroke-width="1.2"/>
+                <!-- Row 1: Active Breaking Catalyst (Mint Highlight) -->
+                <rect x="68" y="68" width="184" height="32" rx="6" fill="#0B1318" stroke="rgba(51,226,154,0.48)" stroke-width="1.2"/>
+                <circle cx="84" cy="84" r="3.5" fill="#33E29A"/>
+                <rect x="96" y="81" width="98" height="6" rx="3" fill="#33E29A" fill-opacity="0.85"/>
+                <rect x="212" y="79" width="28" height="10" rx="3" fill="rgba(51,226,154,0.14)"/>
+                <!-- Row 2: Muted Wire Row -->
+                <rect x="68" y="108" width="184" height="28" rx="6" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                <circle cx="84" cy="122" r="2.5" fill="rgba(255,255,255,0.22)"/>
+                <rect x="96" y="119" width="76" height="5" rx="2.5" fill="rgba(255,255,255,0.20)"/>
+                <!-- Row 3: Muted Wire Row -->
+                <rect x="68" y="144" width="184" height="28" rx="6" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                <circle cx="84" cy="158" r="2.5" fill="rgba(255,255,255,0.15)"/>
+                <rect x="96" y="155" width="60" height="5" rx="2.5" fill="rgba(255,255,255,0.14)"/>
+              </svg>
+            </div>
+            <div class="carousel-card-body">
+              <div class="carousel-card-title">Real-Time News</div>
+              <div class="carousel-card-desc">Curated headlines and SEC catalysts streaming the millisecond news breaks.</div>
+            </div>
+          </a>
+
+          <!-- CARD 2: REAL-TIME QUOTES (KISS: Clean step-line tick wave + live dot) -->
+          <a href="https://godelterminal.com/real-time-quotes/" class="carousel-card">
+            <div class="carousel-card-media">
+              <svg class="kiss-emblem" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="quoteFade" x1="160" y1="74" x2="160" y2="184" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#33E29A" stop-opacity="0.18"/>
+                    <stop offset="100%" stop-color="#33E29A" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <!-- Subtle horizontal grid baselines -->
+                <line x1="48" y1="84" x2="272" y2="84" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3 3"/>
+                <line x1="48" y1="126" x2="272" y2="126" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3 3"/>
+                <line x1="48" y1="168" x2="272" y2="168" stroke="rgba(255,255,255,0.05)" stroke-dasharray="3 3"/>
+                <!-- Area fill under curve -->
+                <path d="M 52 158 L 88 144 L 116 150 L 148 118 L 178 124 L 214 90 L 254 76 L 254 184 L 52 184 Z" fill="url(#quoteFade)"/>
+                <!-- Crisp quote line -->
+                <path d="M 52 158 L 88 144 L 116 150 L 148 118 L 178 124 L 214 90 L 254 76" stroke="#33E29A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Live Bid/Ask pulse endpoint -->
+                <circle cx="254" cy="76" r="9" fill="rgba(51,226,154,0.16)"/>
+                <circle cx="254" cy="76" r="4" fill="#33E29A"/>
+              </svg>
+            </div>
+            <div class="carousel-card-body">
+              <div class="carousel-card-title">Real-Time Quotes</div>
+              <div class="carousel-card-desc">Sub-second multi-asset pricing across equities, options, futures, and FX.</div>
+            </div>
+          </a>
+
+          <!-- CARD 3: SEC FILINGS (KISS: Centered Filing Document + Magnifying Glass Inspecting Highlighted Clause) -->
+          <a href="https://godelterminal.com/sec-filings/" class="carousel-card">
+            <div class="carousel-card-media">
+              <svg class="kiss-emblem" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Centered SEC Filing Document -->
+                <rect x="104" y="46" width="104" height="144" rx="9" fill="#0A0D12" stroke="rgba(255,255,255,0.14)" stroke-width="1.2"/>
+                <!-- Document Header Bar -->
+                <rect x="122" y="66" width="38" height="6" rx="3" fill="rgba(255,255,255,0.24)"/>
+                <rect x="122" y="82" width="68" height="4.5" rx="2.25" fill="rgba(255,255,255,0.12)"/>
+                <rect x="122" y="94" width="58" height="4.5" rx="2.25" fill="rgba(255,255,255,0.12)"/>
+                <!-- Highlighted Search Match Row -->
+                <rect x="116" y="109" width="80" height="20" rx="5" fill="#0B1318" stroke="rgba(51,226,154,0.55)" stroke-width="1.2"/>
+                <rect x="124" y="116.5" width="56" height="5" rx="2.5" fill="#33E29A"/>
+                <!-- Lower Document Lines -->
+                <rect x="122" y="141" width="64" height="4.5" rx="2.25" fill="rgba(255,255,255,0.12)"/>
+                <rect x="122" y="153" width="48" height="4.5" rx="2.25" fill="rgba(255,255,255,0.12)"/>
+                <rect x="122" y="165" width="54" height="4.5" rx="2.25" fill="rgba(255,255,255,0.08)"/>
+                <!-- Crisp Magnifier Overlapping Bottom-Right of Highlighted Row -->
+                <circle cx="196" cy="126" r="22" fill="#070B0E" fill-opacity="0.92" stroke="#33E29A" stroke-width="1.8"/>
+                <circle cx="196" cy="126" r="16" stroke="rgba(51,226,154,0.22)" stroke-width="1"/>
+                <rect x="184" y="123.5" width="24" height="5" rx="2.5" fill="#33E29A"/>
+                <line x1="212" y1="142" x2="227" y2="157" stroke="#33E29A" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="carousel-card-body">
+              <div class="carousel-card-title">SEC Filings</div>
+              <div class="carousel-card-desc">Instant 10-K, 10-Q, and 8-K document search tied straight to financial models.</div>
+            </div>
+          </a>
+
+          <!-- CARD 4: FINANCIAL TERMINAL (KISS: 3-pane docked workspace geometry) -->
+          <a href="https://godelterminal.com/financial-terminal/" class="carousel-card">
+            <div class="carousel-card-media">
+              <svg class="kiss-emblem" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer Terminal Window -->
+                <rect x="52" y="46" width="216" height="148" rx="10" fill="#0A0D12" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/>
+                <!-- Top Command Bar (Mint Highlight) -->
+                <rect x="62" y="56" width="196" height="20" rx="5" fill="#0B1318" stroke="rgba(51,226,154,0.48)" stroke-width="1.2"/>
+                <rect x="70" y="63" width="36" height="6" rx="2" fill="#33E29A"/>
+                <!-- Left Main Chart Pane -->
+                <rect x="62" y="84" width="122" height="98" rx="6" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                <path d="M 76 154 L 98 138 L 118 144 L 146 114 L 168 104" stroke="#33E29A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Right Docked Panes -->
+                <rect x="192" y="84" width="66" height="45" rx="6" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                <rect x="202" y="96" width="46" height="4" rx="2" fill="rgba(255,255,255,0.16)"/>
+                <rect x="202" y="108" width="34" height="4" rx="2" fill="rgba(51,226,154,0.45)"/>
+                <rect x="192" y="137" width="66" height="45" rx="6" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                <rect x="202" y="149" width="46" height="4" rx="2" fill="rgba(255,255,255,0.16)"/>
+                <rect x="202" y="161" width="38" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
+              </svg>
+            </div>
+            <div class="carousel-card-body">
+              <div class="carousel-card-title">Why Switch to Godel?</div>
+              <div class="carousel-card-desc">See how quotes, filings, financials, and news come together in one fast workspace.</div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALES CLOSER CARD (SEE IT IN ACTION) -->
+  <section class="sales-cta-section">
+    <div class="container">
+      <div class="sales-cta-card">
+        <div>
+          <span class="sales-eye-tag">See it in action</span>
+          <h2>A full financial terminal starting at $1,500/seat.</h2>
+          <p>
+            We'll walk through how the research workflow runs end-to-end: quotes, filings, financials, news, and options chains in one workspace. ~10 minutes.
+          </p>
+          <div class="sales-btn-group">
+            <a href="https://godelterminal.com/#demo" target="_blank" rel="noopener noreferrer" class="btn-outline-action">Get a demo</a>
+            <a href="https://app.godelterminal.com/?page=register" target="_blank" rel="noopener noreferrer" class="btn-mint-glow">Launch Godel →</a>
+          </div>
+        </div>
+
+        <div class="sales-social-proof">
+          <h4>Used today by</h4>
+          <ul>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Hedge funds
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Family offices
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              RIAs
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Banks
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Fortune 500 companies
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <div style="width:110px; height:34px; margin-bottom:14px;">
+            <svg viewBox="0 0 345 79" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+              <path d="M232.244 0.0273438H176.033C171.811 0.0273438 167.921 2.30121 165.861 5.98011L137.738 56.1069H179.963C192.821 56.1069 204.672 49.1699 210.962 37.9703L232.251 0.0273438H232.244ZM159.361 44.2828L177.522 11.9193H210.574L200.124 30.5514C195.364 39.036 186.389 44.2896 176.645 44.2896H159.361V44.2828Z" fill="#fff"/>
+              <path d="M162.924 0H106.182C102.286 0 98.6956 2.10417 96.7917 5.4912L68.4106 56.0795H131.455L162.917 0H162.924ZM90.0466 44.2555L108.208 11.892H141.26L123.099 44.2555H90.0466Z" fill="#fff"/>
+              <path d="M337.983 56.0795L345 44.2555H296.989L321.821 0H313.661C309.439 0 305.55 2.27385 303.489 5.95276L275.367 56.0795H337.997H337.983Z" fill="#fff"/>
+              <path d="M47.5973 56.0796L34.8346 78.825H49.8343L80.4184 24.3134H38.3092L31.2921 36.1375H58.7892L54.2336 44.2487H14.0486L32.21 11.8852H75.3936L82.4107 0.0611384L30.721 0.00683594C26.4985 0.00683594 22.6024 2.2807 20.5353 5.95961L1.38798 40.0879C-2.63052 47.2489 2.55749 56.0864 10.7781 56.0864H47.5973V56.0796Z" fill="#fff"/>
+              <path d="M228.008 44.2555L231.353 38.296L232.509 36.2325H260.047L267.064 24.4084H239.146L246.17 11.892H294.222L300.892 0.00683594H244.68C240.458 0.00683594 236.569 2.2807 234.508 5.95961L206.386 56.0864H269.431L276.067 44.2623H228.015L228.008 44.2555Z" fill="#fff"/>
+            </svg>
+          </div>
+          <p class="footer-desc">
+            Market data infrastructure for wealth teams, trading desks, and quantitative builders.
+          </p>
+        </div>
+
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h5>Products</h5>
+            <a href="#terminal">Terminal</a>
+            <a href="https://platform.godelterminal.com/" target="_blank">API Platform</a>
+            <a href="#economics">Economics</a>
+          </div>
+          <div class="footer-col">
+            <h5>Get Started</h5>
+            <a href="https://godelterminal.com/#demo" target="_blank" rel="noopener noreferrer">Book a Demo</a>
+            <a href="https://platform.godelterminal.com/" target="_blank">Developer Platform</a>
+            <a href="https://godelterminal.com/pricing/" target="_blank">Pricing</a>
+            <a href="https://godelterminal.com/docs.html" target="_blank">Documentation</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var videos = [
+        document.getElementById('hero-video')
+      ].filter(Boolean);
+
+      videos.forEach(function(vid) {
+        var playPromise = vid.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function(e) {
+            window.addEventListener('click', function() { vid.play(); }, { once: true });
+            window.addEventListener('scroll', function() { vid.play(); }, { once: true });
+          });
+        }
+      });
+      // Carousel navigation buttons
+      var carouselContainer = document.getElementById('carousel-track-container');
+      var prevBtn = document.getElementById('carousel-prev');
+      var nextBtn = document.getElementById('carousel-next');
+
+      if (carouselContainer && prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', function() {
+          carouselContainer.scrollBy({ left: -340, behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', function() {
+          carouselContainer.scrollBy({ left: 340, behavior: 'smooth' });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
