@@ -398,27 +398,32 @@
       100% { transform: translateX(-100%); }
     }
     .logo-item {
-      height: 28px;
+      height: 36px;
       display: flex;
       align-items: center;
-      color: #8e95a5;
-      font-size: 13px;
-      font-family: var(--font-mono);
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      opacity: 0.75;
-      transition: opacity 0.2s, color 0.2s;
-      white-space: nowrap;
-      text-transform: uppercase;
-      border: 1px dashed rgba(255, 255, 255, 0.12);
-      padding: 6px 14px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.02);
+      justify-content: center;
+      opacity: 0.65;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      flex-shrink: 0;
     }
     .logo-item:hover {
       opacity: 1;
-      color: #fff;
-      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .logo-item img {
+      max-height: 28px;
+      width: auto;
+      max-width: 140px;
+      object-fit: contain;
+      display: block;
+    }
+    .logo-item img.logo-mark {
+      max-height: 34px;
+    }
+    .logo-item img.logo-tall {
+      max-height: 38px;
+    }
+    .logo-item img.logo-wordmark-sm {
+      max-height: 22px;
     }
 
     /* ── BIFURCATION CARDS ── */
@@ -2066,23 +2071,51 @@
     <div class="marquee-wrap">
       <!-- Track 1 (Original) -->
       <div class="marquee-track">
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
+        <div class="logo-item"><img src="assets/logos/07_citadel.png" alt="Citadel"></div>
+        <div class="logo-item"><img src="assets/logos/02_coatue.png" alt="Coatue" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/05_nomura.png" alt="Nomura" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/08_baird.png" alt="Baird" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/14_spacex.png" alt="SpaceX" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/20_chase.png" alt="JPMorgan Chase" class="logo-mark"></div>
+        <div class="logo-item"><img src="assets/logos/01_anduril.png" alt="Anduril" class="logo-mark"></div>
+        <div class="logo-item"><img src="assets/logos/18_palantir.png" alt="Palantir" class="logo-mark"></div>
+        <div class="logo-item"><img src="assets/logos/13_rogo.png" alt="Rogo"></div>
+        <div class="logo-item"><img src="assets/logos/10_think_investments.png" alt="Think Investments" class="logo-tall"></div>
+        <div class="logo-item"><img src="assets/logos/16_hearst.png" alt="Hearst" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/21_liquid.png" alt="Liquid"></div>
+        <div class="logo-item"><img src="assets/logos/03_gghc.png" alt="GGHC"></div>
+        <div class="logo-item"><img src="assets/logos/06_hrkl.png" alt="HRKL"></div>
+        <div class="logo-item"><img src="assets/logos/19_caplight.png" alt="Caplight" class="logo-tall"></div>
+        <div class="logo-item"><img src="assets/logos/12_issuance.png" alt="Issuance" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/09_trs_kentucky.png" alt="TRS Kentucky" class="logo-tall"></div>
+        <div class="logo-item"><img src="assets/logos/17_tenzing.png" alt="Tenzing" class="logo-mark"></div>
+        <div class="logo-item"><img src="assets/logos/11_rooted_wealth.png" alt="Rooted Wealth Advisors" class="logo-tall"></div>
+        <div class="logo-item"><img src="assets/logos/04_vitruvian_a.png" alt="Vitruvian" class="logo-tall"></div>
+        <div class="logo-item"><img src="assets/logos/15_pentagon.png" alt="Partner Fund" class="logo-mark"></div>
       </div>
       <!-- Track 2 (Duplicate for continuous loop) -->
       <div class="marquee-track" aria-hidden="true">
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
-        <div class="logo-item">logo goes here</div>
+        <div class="logo-item"><img src="assets/logos/07_citadel.png" alt="Citadel"></div>
+        <div class="logo-item"><img src="assets/logos/02_coatue.png" alt="Coatue" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/05_nomura.png" alt="Nomura" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/08_baird.png" alt="Baird" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/14_spacex.png" alt="SpaceX" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/20_chase.png" alt="JPMorgan Chase" class="logo-mark"></div>
+        <div class="logo-item"><img src="assets/logos/01_anduril.png" alt="Anduril" class="logo-mark"></div>
+        <div class="logo-item"><img src="assets/logos/18_palantir.png" alt="Palantir" class="logo-mark"></div>
+        <div class="logo-item"><img src="assets/logos/13_rogo.png" alt="Rogo"></div>
+        <div class="logo-item"><img src="assets/logos/10_think_investments.png" alt="Think Investments" class="logo-tall"></div>
+        <div class="logo-item"><img src="assets/logos/16_hearst.png" alt="Hearst" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/21_liquid.png" alt="Liquid"></div>
+        <div class="logo-item"><img src="assets/logos/03_gghc.png" alt="GGHC"></div>
+        <div class="logo-item"><img src="assets/logos/06_hrkl.png" alt="HRKL"></div>
+        <div class="logo-item"><img src="assets/logos/19_caplight.png" alt="Caplight" class="logo-tall"></div>
+        <div class="logo-item"><img src="assets/logos/12_issuance.png" alt="Issuance" class="logo-wordmark-sm"></div>
+        <div class="logo-item"><img src="assets/logos/09_trs_kentucky.png" alt="TRS Kentucky" class="logo-tall"></div>
+        <div class="logo-item"><img src="assets/logos/17_tenzing.png" alt="Tenzing" class="logo-mark"></div>
+        <div class="logo-item"><img src="assets/logos/11_rooted_wealth.png" alt="Rooted Wealth Advisors" class="logo-tall"></div>
+        <div class="logo-item"><img src="assets/logos/04_vitruvian_a.png" alt="Vitruvian" class="logo-tall"></div>
+        <div class="logo-item"><img src="assets/logos/15_pentagon.png" alt="Partner Fund" class="logo-mark"></div>
       </div>
     </div>
   </section>
