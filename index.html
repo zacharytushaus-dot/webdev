@@ -389,7 +389,7 @@
       display: flex;
       align-items: center;
       gap: 64px;
-      animation: marqueeScroll 68s linear infinite;
+      animation: marqueeScroll 115s linear infinite;
       flex-shrink: 0;
       padding-right: 64px;
     }
@@ -1986,6 +1986,433 @@
       transition: color 0.15s;
     }
     .footer-col a:hover { color: #fff; }
+
+    /* ═════════════════════════════════════════════════════════════════
+       MOBILE RESPONSIVE OVERHAUL
+       Targets ≤768px (tablets & phones) and ≤480px (small phones)
+       Reorders sections, fixes typography, prevents overflow, and
+       aligns header/footer closer to production godelterminal.com.
+       ═════════════════════════════════════════════════════════════════ */
+
+    /* ── SECTION REORDERING (mobile only) ── */
+    /* Use flex on body to enable order-based reordering.
+       Header is position:fixed so it's out of flow; the flex
+       layout only affects the in-flow content sections. */
+    @media (max-width: 768px) {
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+      .hero { order: 1; }
+      .logo-marquee-section { order: 2; }
+      .mobile-showcase-section { order: 3; }
+      .cost-strip { order: 4; }
+      .bifurcation { order: 5; }
+      .aries-section { order: 6; }
+      .quote-section { order: 7; }
+      .content-carousel-section { order: 8; }
+      .sales-cta-section { order: 9; }
+      footer { order: 10; }
+      script { display: none; }
+    }
+
+    /* ── HEADER / NAV (≤768px) ── */
+    @media (max-width: 768px) {
+      #fc-navigation {
+        grid-template-columns: auto auto;
+        padding: 0 16px;
+        column-gap: 12px;
+      }
+      .nav-left-group {
+        gap: 12px;
+      }
+      .nav-menu-links {
+        display: none; /* Hide inline nav on mobile; Dom will wire hamburger */
+      }
+      .nav-right-actions {
+        gap: 8px;
+      }
+      .nav-link-demo {
+        display: none; /* Hide "Get a demo" text on mobile; Sign Up suffices */
+      }
+      .fc-nav-secondary {
+        padding: 7px 14px;
+        font-size: 12px;
+      }
+      .btn-mint-glow {
+        padding: 7px 16px;
+        font-size: 12px;
+      }
+      #fc-logo {
+        width: 90px;
+        height: 30px;
+      }
+    }
+    @media (max-width: 420px) {
+      .fc-nav-secondary {
+        display: none; /* Hide Login on very small screens; just show Sign Up */
+      }
+    }
+
+    /* ── HERO (≤768px) ── */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 48px 0 32px;
+      }
+      .hero h1 {
+        font-size: clamp(28px, 7vw, 40px);
+        line-height: 1.15;
+      }
+      .hero p {
+        font-size: 16px;
+        max-width: 520px;
+      }
+      .hero-actions {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+      }
+      .hero-actions a {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+      .hero-actions .btn-mint-glow.hero-cta {
+        padding: 13px 24px;
+        font-size: 15px;
+      }
+      .hero-actions .btn-secondary-action {
+        padding: 12px 22px;
+        font-size: 14px;
+      }
+    }
+
+    /* ── LOGO MARQUEE (≤768px) ── */
+    @media (max-width: 768px) {
+      .logo-marquee-section {
+        padding: 36px 0 24px;
+        margin-bottom: 40px;
+      }
+      .marquee-label {
+        font-size: 10px;
+        letter-spacing: 0.06em;
+      }
+      .marquee-track {
+        gap: 28px;
+        padding-right: 28px;
+      }
+      .logo-item {
+        height: 30px;
+      }
+      .logo-item img {
+        max-height: 22px;
+        max-width: 110px;
+      }
+      .logo-item img.logo-mark {
+        max-height: 28px;
+      }
+      .logo-item img.logo-tall {
+        max-height: 30px;
+      }
+      .logo-item img.logo-wordmark-sm {
+        max-height: 18px;
+      }
+    }
+
+    /* ── MOBILE SHOWCASE / IPHONE MOCKUP (≤768px) ── */
+    @media (max-width: 768px) {
+      .mobile-showcase-section {
+        padding: 48px 20px 0;
+        margin-bottom: 60px;
+      }
+      .mobile-headline {
+        white-space: normal; /* Override nowrap to prevent clipping */
+        font-size: clamp(26px, 7vw, 36px);
+      }
+      .mobile-sub {
+        font-size: 14px;
+        max-width: 420px;
+      }
+      .iphone-frame {
+        width: 280px;
+        height: 400px;
+      }
+      /* Fix the gradient artifact: reduce the white-ish radial overlay
+n         that creates a blown-out circle on narrow screens */
+      .iphone-screen::before {
+        background:
+          radial-gradient(ellipse at 85% 15%, rgba(180, 200, 220, 0.06) 0%, transparent 55%),
+          linear-gradient(65deg, transparent 38%, rgba(255, 255, 255, 0.03) 48%, transparent 58%);
+      }
+      .lock-time {
+        font-size: 48px;
+        margin-bottom: 28px;
+      }
+    }
+    @media (max-width: 420px) {
+      .iphone-frame {
+        width: 260px;
+        height: 370px;
+      }
+      .lock-time {
+        font-size: 42px;
+      }
+      .mobile-meta-row {
+        gap: 16px;
+        font-size: 12px;
+      }
+    }
+
+    /* ── COST STRIP (≤768px) ── */
+    @media (max-width: 768px) {
+      .cost-strip {
+        padding: 56px 0;
+      }
+      .cost-left h3 {
+        font-size: 26px;
+        line-height: 1.25;
+      }
+      .cost-bar-label {
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
+      }
+      .cost-bar-label strong {
+        font-size: 13px;
+      }
+      .cost-bar-label span {
+        font-size: 12px;
+        word-break: break-word;
+      }
+      .cost-comparison-card {
+        padding: 22px 20px;
+      }
+    }
+
+    /* ── BIFURCATION CARDS (≤768px) ── */
+    @media (max-width: 768px) {
+      .bifurcation {
+        padding: 56px 0 64px;
+      }
+      .sec-title {
+        font-size: 26px;
+      }
+      .product-card {
+        padding: 24px 20px;
+      }
+      .card-title {
+        font-size: 22px;
+      }
+      .card-p {
+        font-size: 13.5px;
+      }
+      .concept-stage {
+        height: 200px;
+      }
+      .cmd-node-pill {
+        height: 22px;
+        min-width: 42px;
+        font-size: 9px;
+        padding: 0 8px;
+      }
+      .cmd-g-hub {
+        width: 34px;
+        height: 34px;
+      }
+      .api-code-window {
+        font-size: 10.5px;
+        line-height: 1.5;
+      }
+      .api-code-body {
+        padding: 12px 14px;
+      }
+      /* Stack card bottom: meta above, actions below */
+      .card-bottom {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+      }
+      .card-actions-group {
+        align-items: flex-start;
+        text-align: left;
+        width: 100%;
+      }
+      .card-actions-group .btn-mint-glow,
+      .card-actions-group .btn-secondary-action {
+        width: auto;
+      }
+    }
+    @media (max-width: 420px) {
+      .api-code-window {
+        font-size: 9.5px;
+      }
+      .api-code-line {
+        font-size: 9px;
+      }
+    }
+
+    /* ── ARIES SECTION (≤768px) ── */
+    @media (max-width: 768px) {
+      .aries-section {
+        padding: 56px 0;
+      }
+      .aries-card h2 {
+        font-size: clamp(26px, 6vw, 36px);
+      }
+      .aries-features {
+        gap: 6px;
+      }
+      .aries-feature-pill {
+        font-size: 11px;
+        padding: 4px 9px;
+      }
+      .aries-trust-badges {
+        gap: 16px;
+      }
+      .aries-trust-badge .badge-value {
+        font-size: 15px;
+      }
+      .aries-trust-badge .badge-label {
+        font-size: 10px;
+      }
+      .aries-cta-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .aries-cta-group .btn-mint-glow {
+        padding: 10px 20px;
+        font-size: 13px;
+      }
+    }
+
+    /* ── TESTIMONIAL QUOTE (≤768px) ── */
+    @media (max-width: 768px) {
+      .quote-section {
+        padding: 64px 0;
+      }
+      .stats-headline {
+        font-size: clamp(20px, 5vw, 26px);
+      }
+      .quote-media-wrap {
+        max-width: 200px;
+        aspect-ratio: 1 / 1;
+      }
+      .quote-content blockquote p {
+        font-size: clamp(18px, 4.5vw, 22px);
+      }
+    }
+
+    /* ── CAROUSEL (≤768px) ── */
+    @media (max-width: 768px) {
+      .content-carousel-section {
+        padding: 48px 0 56px;
+      }
+      .carousel-title-group h2 {
+        font-size: 24px;
+      }
+      .carousel-card {
+        width: 260px;
+      }
+      .carousel-card-body {
+        padding: 18px 16px 22px;
+      }
+      .carousel-card-title {
+        font-size: 15px;
+      }
+      .carousel-card-desc {
+        font-size: 12px;
+      }
+    }
+
+    /* ── SALES CTA (≤768px) ── */
+    @media (max-width: 768px) {
+      .sales-cta-section {
+        padding: 0 0 40px;
+      }
+      .sales-cta-card {
+        padding: 28px 22px;
+      }
+      .sales-cta-card h2 {
+        font-size: 22px;
+        line-height: 1.3;
+      }
+      .sales-cta-card p {
+        font-size: 13.5px;
+      }
+      .sales-btn-group {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+      }
+      .sales-btn-group a {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+      .sales-social-proof ul {
+        gap: 7px;
+      }
+      .sales-social-proof li {
+        font-size: 13px;
+      }
+    }
+
+    /* ── FOOTER (≤768px) ── */
+    @media (max-width: 768px) {
+      footer {
+        padding: 36px 0 48px;
+      }
+      .footer-top {
+        flex-direction: column;
+        gap: 28px;
+      }
+      .footer-desc {
+        max-width: 100%;
+      }
+      .footer-cols {
+        gap: 32px;
+      }
+      .footer-col h5 {
+        font-size: 11px;
+      }
+      .footer-col a {
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+    }
+    @media (max-width: 420px) {
+      .footer-cols {
+        flex-direction: column;
+        gap: 24px;
+      }
+    }
+
+    /* ── SHOWCASE FRAME / VIDEO (≤768px) ── */
+    @media (max-width: 768px) {
+      .showcase-wrapper {
+        max-width: 100%;
+        margin: 0 16px;
+      }
+      .showcase-frame {
+        border-radius: 10px;
+      }
+    }
+
+    /* ── STATS (≤768px) ── */
+    @media (max-width: 768px) {
+      .stats-container {
+        padding: 32px 0 20px;
+      }
+      .stat-number {
+        font-size: clamp(28px, 8vw, 38px);
+      }
+      .stat-label {
+        font-size: 12.5px;
+      }
+    }
   </style>
 </head>
 <body>
